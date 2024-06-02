@@ -1,0 +1,27 @@
+﻿<Application
+    x:Class="practic.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:practic"
+    xmlns:view="clr-namespace:practic.MVVM.View"
+    xmlns:viewModel="clr-namespace:practic.MVVM.ViewModel">
+    <Application.Resources>
+        <DataTemplate DataType="{x:Type viewModel:UserPageViewModel}">
+            <view:UserPageView />
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type viewModel:AdminPageViewModel}">
+            <view:AdminPageView />
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type viewModel:AuthorizeViewModel}">
+            <view:AuthorizeView />
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type viewModel:RegistrationViewModel}">
+            <view:RegistrationView />
+        </DataTemplate>
+
+
+    </Application.Resources>
+</Application>
