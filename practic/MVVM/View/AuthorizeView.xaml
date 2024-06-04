@@ -40,7 +40,7 @@
                     Width="300"
                     Height="40"
                     VerticalContentAlignment="Center"
-                    Text="{Binding Login}" />
+                    Text="{Binding Login, UpdateSourceTrigger=PropertyChanged}" />
             </StackPanel>
             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                 <TextBlock

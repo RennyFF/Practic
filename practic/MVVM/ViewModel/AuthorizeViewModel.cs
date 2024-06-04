@@ -21,6 +21,8 @@ namespace practic.MVVM.ViewModel
     }
     public class AuthorizeViewModel : Core.ViewModel
     {
+        public delegate void UserUpdatedByLoginEventHandler(User user);
+        public event UserUpdatedByLoginEventHandler UserByLoginUpdated;
         private List<User> users_list = new();
         public List<User> USERS
         {
@@ -83,10 +85,12 @@ namespace practic.MVVM.ViewModel
                     {
                         if (user.isAdmin)
                         {
+                            UserByLoginUpdated?.Invoke(user);
                             Navigation.NavigateTo<AdminPageViewModel>();
                         }
                         else
                         {
+                            UserByLoginUpdated?.Invoke(user);
                             Navigation.NavigateTo<UserPageViewModel>();
                         }
                     }
@@ -110,6 +114,7 @@ namespace practic.MVVM.ViewModel
             isSuccessCreation = db.CreateDBTickets();
             if (isSuccessCreation)
             {
+                Creation();
                USERS = db.GetDBUsers();
             }
             else
@@ -137,6 +142,21 @@ namespace practic.MVVM.ViewModel
             us.secondName = "";
             us.isAdmin = false;
            await db.AddDBUsersAsync(us);
+           Ticket ticket = new Ticket();
+           ticket.client_id = 2;
+           ticket.causeby = "mommy";
+           ticket.status = "Fyck";
+           ticket.responsible = "YA";
+           ticket.typeofcause = "meow";
+           ticket.date = "20024";
+           await db.AddDBTicketsAsync(ticket);
+           ticket.client_id = 2;
+           ticket.causeby = "mommy2";
+           ticket.status = "Fyck2";
+           ticket.typeofcause = "meow2";
+           ticket.responsible = "YA";
+            ticket.date = "20023";
+           await db.AddDBTicketsAsync(ticket);
         }
     }
 }

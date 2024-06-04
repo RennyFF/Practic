@@ -22,6 +22,9 @@
             <view:RegistrationView />
         </DataTemplate>
 
+        <Style x:Key="HeaderDataGridStyle" TargetType="DataGridColumnHeader">
+            <Setter Property="HorizontalAlignment" Value="Center" />
+        </Style>
 
     </Application.Resources>
 </Application>

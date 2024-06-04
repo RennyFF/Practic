@@ -119,7 +119,7 @@ namespace practic.MVVM.Model
                 SQLiteCommand command = new();
                 command.Connection = connection;
                 command.CommandText = $"CREATE TABLE IF NOT EXISTS {_tickets}(Id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, dateOfCreation TEXT, " +
-                                      "CauseBy TEXT, TypeOfCause TEXT, Status TEXT, Client_Id INTEGER, FOREIGN KEY (Client_Id) REFERENCES Users(Id))";
+                                      "CauseBy TEXT, TypeOfCause TEXT, Status TEXT, Responsible TEXT, Client_Id INTEGER, FOREIGN KEY (Client_Id) REFERENCES Users(Id))";
                 try
                 {
                     command.ExecuteNonQuery();
@@ -152,6 +152,7 @@ namespace practic.MVVM.Model
                         answer.causeby = reader["CauseBy"].ToString();
                         answer.typeofcause = reader["TypeOfCause"].ToString();
                         answer.status = reader["Status"].ToString();
+                        answer.responsible = reader["Responsible"].ToString();
 
                         result.Add(answer);
                     }
@@ -160,20 +161,21 @@ namespace practic.MVVM.Model
 
             return result;
         }
-        public async Task<bool> AddDBTicketsAsync(Ticket answer)
+        public async Task<bool> AddDBTicketsAsync(Ticket ticket)
         {
             using (var connection = new SQLiteConnection($"Data Source={_connectionString}"))
             {
                 await connection.OpenAsync();
                 SQLiteCommand command = new();
                 command.Connection = connection;
-                command.CommandText = $"INSERT INTO Answers (dateOfCreation, CauseBy, TypeOfCause, Status, Client_Id) " +
-                                      $"VALUES (@dateOfCreation, @CauseBy, @TypeOfCause, @Status, @Client_Id";
-                command.Parameters.AddWithValue("@dateOfCreation", answer.date);
-                command.Parameters.AddWithValue("@CauseBy", answer.causeby);
-                command.Parameters.AddWithValue("@TypeOfCause", answer.typeofcause);
-                command.Parameters.AddWithValue("@Status", answer.status);
-                command.Parameters.AddWithValue("@Client_Id", answer.client_id);
+                command.CommandText = $"INSERT INTO {_tickets} (dateOfCreation, CauseBy, TypeOfCause, Status, Responsible, Client_Id) " +
+                                      $"VALUES (@dateOfCreation, @CauseBy, @TypeOfCause, @Status, @Responsible, @Client_Id)";
+                command.Parameters.AddWithValue("@dateOfCreation", ticket.date);
+                command.Parameters.AddWithValue("@CauseBy", ticket.causeby);
+                command.Parameters.AddWithValue("@TypeOfCause", ticket.typeofcause);
+                command.Parameters.AddWithValue("@Status", ticket.status);
+                command.Parameters.AddWithValue("@Responsible", ticket.responsible);
+                command.Parameters.AddWithValue("@Client_Id", ticket.client_id);
                 try
                 {
                     await command.ExecuteNonQueryAsync();
@@ -193,13 +195,14 @@ namespace practic.MVVM.Model
                 connection.Open();
 
                 SQLiteCommand command = new(connection);
-                command.CommandText = $"UPDATE {_tickets} SET dateOfCreation = @dateOfCreation, CauseBy = @CauseBy, TypeOfCause = @TypeOfCause, Status = @Status, Client_Id = @Client_Id WHERE Id = @Id";
+                command.CommandText = $"UPDATE {_tickets} SET dateOfCreation = @dateOfCreation, CauseBy = @CauseBy, TypeOfCause = @TypeOfCause, Status = @Status, , Responsible = @Responsible, Client_Id = @Client_Id WHERE Id = @Id";
 
                 command.Parameters.AddWithValue("@Id", answer.id);
                 command.Parameters.AddWithValue("@dateOfCreation", answer.date);
                 command.Parameters.AddWithValue("@CauseBy", answer.causeby);
                 command.Parameters.AddWithValue("@TypeOfCause", answer.typeofcause);
                 command.Parameters.AddWithValue("@Status", answer.status);
+                command.Parameters.AddWithValue("@Responsible", answer.responsible);
                 command.Parameters.AddWithValue("@Client_Id", answer.client_id);
 
                 try

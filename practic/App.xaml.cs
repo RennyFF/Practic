@@ -1,6 +1,8 @@
-﻿using System.Configuration;
+﻿using System.Collections.ObjectModel;
+using System.Configuration;
 using System.Data;
 using System.Windows;
+using System.Windows.Data;
 using Microsoft.Extensions.DependencyInjection;
 using practic.Core;
 using practic.MVVM.Model;
@@ -41,6 +43,14 @@ namespace practic
         {
             var regViewModel = _serviceProvider.GetRequiredService<RegistrationViewModel>();
             var authorizeViewModel = _serviceProvider.GetRequiredService<AuthorizeViewModel>();
+            var userPageViewModel = _serviceProvider.GetRequiredService<UserPageViewModel>();
+            authorizeViewModel.UserByLoginUpdated += (User user) =>
+            {
+                userPageViewModel.ActiveUser = user;
+                userPageViewModel.Tickets = GetNeededTickets(user);
+                userPageViewModel.FilteredTickets = CollectionViewSource.GetDefaultView(userPageViewModel.Tickets);
+                userPageViewModel.FilteredTickets.Filter = userPageViewModel.FilterTickets;
+            };
             regViewModel.UsersByRegistrationUpdated += () =>
             {
                 authorizeViewModel.USERS = db.GetDBUsers();
@@ -48,6 +58,12 @@ namespace practic
             var mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
             mainWindow.Show();
             base.OnStartup(e);
+        }
+
+        private ObservableCollection<Ticket> GetNeededTickets(User user)
+        {
+            List<Ticket> _tickets = db.GetDBTickets();
+            return new ObservableCollection<Ticket>(_tickets.Where(i => i.client_id == user.id));
         }
     }
 

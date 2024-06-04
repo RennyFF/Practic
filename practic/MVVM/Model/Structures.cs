@@ -23,6 +23,7 @@ namespace practic.MVVM.Model
             public string typeofcause { get; set; }
             public int client_id{ get; set; }
             public string status { get; set; }
+            public string responsible { get; set; }
         }
 
 }

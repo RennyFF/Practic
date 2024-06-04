@@ -70,7 +70,7 @@ namespace practic.MVVM.ViewModel
                 return submitRegistration ??= new RelayCommand(async obj =>
                 {
                     var validationResult = _userValidator.Validate(this);
-                    if (validationResult.IsValid)
+                    if (validationResult.IsValid && (Firstname != null && Secondname != null && Login != null && Password != null))
                     {
                         User new_user = new User();
                         new_user.firstName = Firstname;
@@ -96,6 +96,7 @@ namespace practic.MVVM.ViewModel
             get
             {
                 var firstOrDefault = _userValidator.Validate(this).Errors.FirstOrDefault(lol => lol.PropertyName == columnName);
+                
                 if (firstOrDefault != null)
                     return _userValidator != null ? firstOrDefault.ErrorMessage : "";
                 return "";
