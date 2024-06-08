@@ -118,7 +118,7 @@ namespace practic.MVVM.Model
                 connection.Open();
                 SQLiteCommand command = new();
                 command.Connection = connection;
-                command.CommandText = $"CREATE TABLE IF NOT EXISTS {_tickets}(Id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, dateOfCreation TEXT, " +
+                command.CommandText = $"CREATE TABLE IF NOT EXISTS {_tickets}(Id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, numberTicket INTEGER, dateOfCreation TEXT, " +
                                       "CauseBy TEXT, TypeOfCause TEXT, Status TEXT, Responsible TEXT, Client_Id INTEGER, FOREIGN KEY (Client_Id) REFERENCES Users(Id))";
                 try
                 {
@@ -147,6 +147,7 @@ namespace practic.MVVM.Model
                     {
                         Ticket answer = new();
                         answer.id = Convert.ToInt32(reader["Id"]);
+                        answer.number_ticket = Convert.ToInt32(reader["numberTicket"]);
                         answer.client_id = Convert.ToInt32(reader["Client_Id"]);
                         answer.date = reader["dateOfCreation"].ToString();
                         answer.causeby = reader["CauseBy"].ToString();
@@ -168,8 +169,9 @@ namespace practic.MVVM.Model
                 await connection.OpenAsync();
                 SQLiteCommand command = new();
                 command.Connection = connection;
-                command.CommandText = $"INSERT INTO {_tickets} (dateOfCreation, CauseBy, TypeOfCause, Status, Responsible, Client_Id) " +
-                                      $"VALUES (@dateOfCreation, @CauseBy, @TypeOfCause, @Status, @Responsible, @Client_Id)";
+                command.CommandText = $"INSERT INTO {_tickets} (numberTicket, dateOfCreation, CauseBy, TypeOfCause, Status, Responsible, Client_Id) " +
+                                      $"VALUES (@numberTicket, @dateOfCreation, @CauseBy, @TypeOfCause, @Status, @Responsible, @Client_Id)";
+                command.Parameters.AddWithValue("@numberTicket", ticket.number_ticket);
                 command.Parameters.AddWithValue("@dateOfCreation", ticket.date);
                 command.Parameters.AddWithValue("@CauseBy", ticket.causeby);
                 command.Parameters.AddWithValue("@TypeOfCause", ticket.typeofcause);
@@ -195,9 +197,9 @@ namespace practic.MVVM.Model
                 connection.Open();
 
                 SQLiteCommand command = new(connection);
-                command.CommandText = $"UPDATE {_tickets} SET dateOfCreation = @dateOfCreation, CauseBy = @CauseBy, TypeOfCause = @TypeOfCause, Status = @Status, , Responsible = @Responsible, Client_Id = @Client_Id WHERE Id = @Id";
+                command.CommandText = $"UPDATE {_tickets} SET numberTicket = @numberTicket, dateOfCreation = @dateOfCreation, CauseBy = @CauseBy, TypeOfCause = @TypeOfCause, Status = @Status, , Responsible = @Responsible, Client_Id = @Client_Id WHERE Id = @Id";
 
-                command.Parameters.AddWithValue("@Id", answer.id);
+                command.Parameters.AddWithValue("@numberTicket", answer.id);
                 command.Parameters.AddWithValue("@dateOfCreation", answer.date);
                 command.Parameters.AddWithValue("@CauseBy", answer.causeby);
                 command.Parameters.AddWithValue("@TypeOfCause", answer.typeofcause);

@@ -61,7 +61,7 @@
             <DataGrid.Columns>
                 <DataGridTextColumn
                     Width="0.5*"
-                    Binding="{Binding id}"
+                    Binding="{Binding number_ticket}"
                     Header="Номер заявки" />
                 <DataGridTextColumn
                     Width="*"

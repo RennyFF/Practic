@@ -44,12 +44,23 @@ namespace practic
             var regViewModel = _serviceProvider.GetRequiredService<RegistrationViewModel>();
             var authorizeViewModel = _serviceProvider.GetRequiredService<AuthorizeViewModel>();
             var userPageViewModel = _serviceProvider.GetRequiredService<UserPageViewModel>();
+            var adminPageViewModel = _serviceProvider.GetRequiredService<AdminPageViewModel>();
             authorizeViewModel.UserByLoginUpdated += (User user) =>
             {
+                if (user.isAdmin)
+                {
+                    adminPageViewModel.ActiveUser = user;
+                    adminPageViewModel.Tickets = GetAllTickets();
+                    adminPageViewModel.FilteredTickets = CollectionViewSource.GetDefaultView(adminPageViewModel.Tickets);
+                    adminPageViewModel.FilteredTickets.Filter = adminPageViewModel.FilterTickets;
+                }
+                else
+                {
                 userPageViewModel.ActiveUser = user;
                 userPageViewModel.Tickets = GetNeededTickets(user);
                 userPageViewModel.FilteredTickets = CollectionViewSource.GetDefaultView(userPageViewModel.Tickets);
                 userPageViewModel.FilteredTickets.Filter = userPageViewModel.FilterTickets;
+                }
             };
             regViewModel.UsersByRegistrationUpdated += () =>
             {
@@ -64,6 +75,11 @@ namespace practic
         {
             List<Ticket> _tickets = db.GetDBTickets();
             return new ObservableCollection<Ticket>(_tickets.Where(i => i.client_id == user.id));
+        }
+        private ObservableCollection<Ticket> GetAllTickets()
+        {
+            List<Ticket> _tickets = db.GetDBTickets();
+            return new ObservableCollection<Ticket>(_tickets);
         }
     }
 

@@ -20,8 +20,6 @@ namespace practic.MVVM.ViewModel
 
     public class UserPageViewModel : Core.ViewModel
     {
-        private INavigationService _navigationService;
-        public INavigationService Navigation { get => _navigationService; set { _navigationService = value; OnPropertyChanged(); } }
         private ObservableCollection<Ticket> tickets = new();
 
         public ObservableCollection<Ticket> Tickets
@@ -80,15 +78,12 @@ namespace practic.MVVM.ViewModel
 
         public ObservableCollection<ColumnOption> ColumnOptions { get; set; }
 
-        public RelayCommand NavigateToSettingsView { get; set; }
 
-        public UserPageViewModel(INavigationService navigation)
+        public UserPageViewModel()
         {
-            Navigation = navigation;
-            NavigateToSettingsView = new RelayCommand(o => { Navigation.NavigateTo<AdminPageViewModel>(); }, o => true);
             ColumnOptions = new ObservableCollection<ColumnOption>
             {
-                new ColumnOption { DisplayName = "Номер заявки", ColumnTag = "id" },
+                new ColumnOption { DisplayName = "Номер заявки", ColumnTag = "number_ticket" },
                 new ColumnOption { DisplayName = "Дата создания", ColumnTag = "date" },
                 new ColumnOption { DisplayName = "Поломка", ColumnTag = "causeby" },
                 new ColumnOption { DisplayName = "Тип поломки", ColumnTag = "typeofcause" },

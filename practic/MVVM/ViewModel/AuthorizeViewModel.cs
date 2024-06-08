@@ -83,14 +83,13 @@ namespace practic.MVVM.ViewModel
                     User? user = Authenticate(Login, Password, USERS);
                     if (user != null)
                     {
+                        UserByLoginUpdated?.Invoke(user);
                         if (user.isAdmin)
                         {
-                            UserByLoginUpdated?.Invoke(user);
                             Navigation.NavigateTo<AdminPageViewModel>();
                         }
                         else
                         {
-                            UserByLoginUpdated?.Invoke(user);
                             Navigation.NavigateTo<UserPageViewModel>();
                         }
                     }
@@ -114,7 +113,7 @@ namespace practic.MVVM.ViewModel
             isSuccessCreation = db.CreateDBTickets();
             if (isSuccessCreation)
             {
-                Creation();
+                //Creation();
                USERS = db.GetDBUsers();
             }
             else
@@ -144,6 +143,7 @@ namespace practic.MVVM.ViewModel
            await db.AddDBUsersAsync(us);
            Ticket ticket = new Ticket();
            ticket.client_id = 2;
+           ticket.number_ticket = 0;
            ticket.causeby = "mommy";
            ticket.status = "Fyck";
            ticket.responsible = "YA";
@@ -152,6 +152,7 @@ namespace practic.MVVM.ViewModel
            await db.AddDBTicketsAsync(ticket);
            ticket.client_id = 2;
            ticket.causeby = "mommy2";
+           ticket.number_ticket = 1;
            ticket.status = "Fyck2";
            ticket.typeofcause = "meow2";
            ticket.responsible = "YA";

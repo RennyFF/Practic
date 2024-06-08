@@ -18,6 +18,7 @@ namespace practic.MVVM.Model
        public class Ticket()
         {
             public int id { get; set; }
+            public int number_ticket { get; set; }
             public string date { get; set; }
             public string causeby { get; set; }
             public string typeofcause { get; set; }
